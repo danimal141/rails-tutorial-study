@@ -3,16 +3,15 @@
 h1 Sign in
 div.row
   div.span6.offset3
-    = form_for(:session, url: sessions_path) do |f|
-      = f.label :email
-      = f.text_field :email
+    = form_tag(sessions_path) do
+      = label :session, :email
+      = text_field :session, :email
 
-      = f.label :password
-      = f.password_field :password
+      = label :session, :password
+      = password_field :session, :password
 
-      = f.submit 'Sign in', class: 'btn btn-large btn-primary'
-
+      = submit_tag 'Sign in', class: 'btn btn-large btn-primary'
     p
       span> New user?
-      = link_to('Sign up now!', signup_path)
+      = link_to 'Sign up now!', signup_path
 
