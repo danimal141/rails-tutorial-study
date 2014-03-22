@@ -12,7 +12,11 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    unless signed_in?
+      @user = User.new
+    else
+      redirect_to root_url
+    end
   end
 
   def edit
@@ -38,7 +42,8 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
+    @user = User.find(params[:id])
+    @user.destroy unless @user.admin?
     redirect_to users_url, flash: { success: 'User destroyed.' }
   end
 

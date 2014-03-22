@@ -42,6 +42,18 @@ describe 'User pages' do
             click_link('delete', match: :first)
           end.to change(User, :count).by(-1)
         end
+
+        describe 'submitting a DELETE request to the Users#destroy action' do
+          before do
+            sign_in admin, no_capybara: true
+          end
+
+          it 'should not be able to admin user' do
+            expect do
+              delete user_path(admin)
+            end.not_to change(User, :count)
+          end
+        end
       end
 
       describe 'as non-admin user' do
@@ -145,6 +157,27 @@ describe 'User pages' do
       it { should have_link('Sign out'), href: signout_path }
       specify { expect(user.reload.name).to eq new_name }
       specify { expect(user.reload.email).to eq new_email }
+    end
+
+    describe 'forbidden attributes' do
+      let(:params) do
+        { user:
+          {
+            name: 'hoge',
+            email: 'hoge@example.com',
+            password: 'foobar',
+            password_confirmation: 'foobar',
+            admin: true
+          }
+        }
+      end
+      before { sign_in user, no_capybara: true }
+
+      describe 'submitting a PATCH request to the User#update action' do
+        before { patch user_path(user), params }
+
+        specify { expect(user.reload).not_to be_admin }
+      end
     end
   end
 end
