@@ -201,6 +201,7 @@ input {
 }
 .content {
   display: block;
+  word-break: break-all;
 }
 .timestamp {
   color: $grayLight;

@@ -7,9 +7,9 @@ div.row
         = gravatar_for @user, { size: 80 }
         = @user.name
 
-  div.span8
-   - if @user.microposts.any?
-     h3 = "Micropost(#{@user.microposts.count})"
-     ol.microposts
-       = render @microposts
-     = paginate @microposts
+  - if @user.microposts.any?
+    div.span8
+      h3 = "Micropost(#{@user.microposts.count})"
+      ol.microposts
+        = render @microposts
+      = paginate @microposts

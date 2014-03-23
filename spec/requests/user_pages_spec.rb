@@ -75,7 +75,10 @@ describe 'User pages' do
     let!(:m1) { FactoryGirl.create(:micropost, user: user, content: 'Foo') }
     let!(:m2) { FactoryGirl.create(:micropost, user: user, content: 'Bar') }
 
-    before { visit user_path(user) }
+    before do
+      sign_in user
+      visit user_path(user)
+    end
 
     it { should have_title(user.name) }
 
@@ -83,6 +86,21 @@ describe 'User pages' do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
+
+      describe 'delete links' do
+        it { should have_link('delete') }
+
+        describe "as other user" do
+          let(:other_user) { FactoryGirl.create(:user) }
+          before do
+            sign_in other_user
+            visit user_path(user)
+          end
+
+          it { should have_title(user.name) }
+          it { should_not have_link('delete') }
+        end
+      end
     end
   end
 

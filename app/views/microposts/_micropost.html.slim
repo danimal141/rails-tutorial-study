@@ -3,6 +3,7 @@ li
   span.timestamp = "Posted #{time_ago_in_words(micropost.created_at)} ago"
 
   - if current_user?(micropost.user)
+    span<> |
     = link_to 'delete', micropost, method: :delete,
               data: { confirm: 'Are you sure?' },
               title: micropost.content
