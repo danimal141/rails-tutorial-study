@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :signed_in_user, only: [:index, :edit, :update, :destroy]
-  before_action :correct_user, only: [:edit, :update]
+  before_action :signed_in_user, only:%i[ index edit update destroy following followers ]
+  before_action :correct_user, only: %i[ edit update ]
   before_action :admin_user, only: :destroy
 
   def index
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update_attributes(user_params)
+    if @user.update_attributes user_params
       redirect_to @user, flash: { success: 'Profile updated' }
     else
       render 'edit'
@@ -32,7 +32,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
+    @user = User.new user_params
 
     if @user.save
       sign_in @user
@@ -43,9 +43,23 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user = User.find(params[:id])
+    @user = User.find params[:id]
     @user.destroy unless @user.admin?
     redirect_to users_url, flash: { success: 'User destroyed.' }
+  end
+
+  def following
+    @title = 'Following'
+    @user = User.find params[:id]
+    @users = @user.followed_users.page params[:page]
+    render 'show_follow'
+  end
+
+  def followers
+    @title = 'Followers'
+    @user = User.find params[:id]
+    @users = @user.followers.page params[:page]
+    render 'show_follow'
   end
 
   private
@@ -54,7 +68,7 @@ class UsersController < ApplicationController
   end
 
   def correct_user
-    @user = User.find(params[:id])
+    @user = User.find params[:id]
     redirect_to root_url unless current_user? @user
   end
 

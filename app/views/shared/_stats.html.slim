@@ -1,0 +1,9 @@
+- @user ||= current_user
+div.stats
+  a href="#{following_user_path(@user)}"
+    strong#following.stats = @user.followed_users.count
+    | following
+  a href="#{followers_user_path(@user)}"
+    strong#followers.stats = @user.followers.count
+    | followers
+
