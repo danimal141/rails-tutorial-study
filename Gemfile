@@ -9,7 +9,7 @@ gem 'slim-rails'
 gem 'pry-rails'
 
 group :development, :test do
-  gem 'sqlite3', '1.3.8'
+  gem 'sqlite3'
   gem 'rspec-rails', '2.13.1'
 end
 
